@@ -3,7 +3,7 @@ from tkinter import filedialog
 from tkinter import ttk
 from tkinter import messagebox
 import os
-import run
+import Main
 
 class GUI:
     def __init__(self, master):
