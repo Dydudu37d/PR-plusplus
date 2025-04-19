@@ -100,24 +100,17 @@ class GUI:
         self.modules = ['print', 'prln', 'input']
 
         for i in self.modules:
-            self.text_input.tag_configure(i, foreground='purple')
+            self.text_input.tag_configure(i, foreground='blue')
+
+        for i in self.keywords:
+            self.text_input.tag_configure(i, foreground="purple", font=("Ubuntu Mono", 12, "bold"))
 
 
         # 定义关键词标签和样式
-        self.text_input.tag_configure('print', foreground='blue')
-        self.text_input.tag_configure('prln', foreground='blue')
         self.text_input.tag_configure("'", foreground='green')
         self.text_input.tag_configure('//', foreground='gray')  # 为注释添加颜色
-        self.text_input.tag_configure('return', foreground='blue')
-        self.text_input.tag_configure('func', foreground='blue')
-        self.text_input.tag_configure('run', foreground='blue')
-        self.text_input.tag_configure('loop', foreground='blue')
-        self.text_input.tag_configure('while', foreground='blue')
         self.text_input.tag_configure('True', foreground='green')
         self.text_input.tag_configure('False', foreground='red')
-        self.text_input.tag_configure('load', foreground='purple')
-        self.text_input.tag_configure('as', foreground='purple')
-        self.text_input.tag_configure('from', foreground='purple')
         
         self.text_input.bind("<KeyRelease>", self.highlight_keywords)  # 绑定键盘事件，实时高亮关键词
 
