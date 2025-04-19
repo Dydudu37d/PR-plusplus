@@ -148,7 +148,7 @@ class GUI:
 
     def run_and_save(self):
         os.system("cls")
-        run.start(self.text_input.get("1.0", END))
+        Main.start(self.text_input.get("1.0", END))
     
     def save_content(self, file):
         with open(file, "w") as f:
