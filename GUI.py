@@ -107,6 +107,7 @@ class GUI:
         self.text_input.tag_configure('print', foreground='blue')
         self.text_input.tag_configure('prln', foreground='blue')
         self.text_input.tag_configure("'", foreground='green')
+        self.text_input.tag_configure('"', foreground='green')
         self.text_input.tag_configure('//', foreground='gray')  # 为注释添加颜色
         self.text_input.tag_configure('return', foreground='blue')
         self.text_input.tag_configure('func', foreground='blue')
@@ -159,7 +160,8 @@ class GUI:
         # 清除所有标签
 
         self.text_input.tag_remove("'", '1.0', END)
-        self.text_input.tag_remove('//', '1.0', END)  # 清除注释标签
+        self.text_input.tag_remove('"', '1.0', END)
+        self.text_input.tag_remove('//', '1.0', END)
         self.text_input.tag_remove('return', '1.0', END)
         self.text_input.tag_remove('func', '1.0', END)
         self.text_input.tag_remove('loop', '1.0', END)
@@ -241,6 +243,20 @@ class GUI:
             # 高亮从第一个单引号到第二个单引号之间的内容
             self.text_input.tag_add("'", start, f"{end}+1c")  # 使用半角单引号作为标签名称
             start = f"{end}+1c"  # 继续搜索下一个单引号
+            
+        # 高亮关键词 ""
+        start = "1.0"
+        while True:
+            start = self.text_input.search('"', start, stopindex=END, regexp=False)  # 使用半角引号
+            if not start:
+                break
+            # 找到单引号后，找到下一个引号的位置
+            end = self.text_input.search('"', f"{start}+1c", stopindex=END, regexp=False)
+            if not end:
+                break
+            # 高亮从第一个引号到第二个引号之间的内容
+            self.text_input.tag_add('"', start, f"{end}+1c")  # 使用半角单引号作为标签名称
+            start = f"{end}+1c"  # 继续搜索下一个引号
             
         
 
