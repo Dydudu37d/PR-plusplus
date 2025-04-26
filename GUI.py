@@ -104,7 +104,6 @@ class GUI:
 
 
         # 定义关键词标签和样式
-        self.text_input.tag_configure('print', foreground='blue')
         self.text_input.tag_configure('prln', foreground='blue')
         self.text_input.tag_configure("'", foreground='green')
         self.text_input.tag_configure('"', foreground='green')
@@ -169,7 +168,6 @@ class GUI:
         self.text_input.tag_remove('run', '1.0', END)
         self.text_input.tag_remove('True', '1.0', END)
         self.text_input.tag_remove('False', '1.0', END)
-        self.text_input.tag_remove('print', '1.0', END)
         self.text_input.tag_remove('prln', '1.0', END)
         self.text_input.tag_remove('load', '1.0', END)
         self.text_input.tag_remove('as', '1.0', END)
@@ -184,17 +182,6 @@ class GUI:
                 break
             end = f"{start}+{len('prln')}c"
             self.text_input.tag_add('prln', start, end)
-            start = end
-            
-        # 高亮关键词 print
-        content = self.text_input.get("1.0", END)
-        start = "1.0"
-        while True:
-            start = self.text_input.search("print", start, stopindex=END, regexp=False)
-            if not start:
-                break
-            end = f"{start}+{len('print')}c"
-            self.text_input.tag_add('print', start, end)
             start = end
             
         # 高亮关键词 load
