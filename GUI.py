@@ -8,7 +8,7 @@ import Main
 class GUI:
     def __init__(self, master):
         self.master = master
-        master.title("A++")
+        master.title("PR++ IDLE")
         master.geometry("1280x720")
 
         self.menu = Menu()
@@ -36,7 +36,7 @@ class GUI:
         
         self.run_menu = Menu(self.menu, tearoff=0)
         self.menu.add_cascade(label="Run", menu=self.run_menu)
-        self.run_menu.add_command(label="Run A++ file", command=self.run_and_save)
+        self.run_menu.add_command(label="Run PR++ file", command=self.run_and_save)
         
         self.help_menu = Menu(self.menu, tearoff=0)
         self.menu.add_cascade(label="Help", menu=self.help_menu)
@@ -75,7 +75,7 @@ class GUI:
         
         self.welcome_list = Listbox(self.tab2)
         self.welcome_list.pack(fill=BOTH, expand=1)
-        self.welcome_list.insert(END, "欢迎使用A++")
+        self.welcome_list.insert(END, "欢迎使用PR++")
         self.welcome_list.insert(END, "1. 打开文件")
         self.welcome_list.insert(END, "2. 保存文件")
         self.welcome_list.insert(END, "3. 另存为")
@@ -104,9 +104,9 @@ class GUI:
 
 
         # 定义关键词标签和样式
+        self.text_input.tag_configure('print', foreground='blue')
         self.text_input.tag_configure('prln', foreground='blue')
         self.text_input.tag_configure("'", foreground='green')
-        self.text_input.tag_configure('"', foreground='green')
         self.text_input.tag_configure('//', foreground='gray')  # 为注释添加颜色
         self.text_input.tag_configure('return', foreground='blue')
         self.text_input.tag_configure('func', foreground='blue')
@@ -122,13 +122,13 @@ class GUI:
         self.text_input.bind("<KeyRelease>", self.highlight_keywords)  # 绑定键盘事件，实时高亮关键词
 
         self.editor.add(self.tab2, text="歡迎")
-        self.editor.add(self.tab3, text="未命名1.appp")
+        self.editor.add(self.tab3, text="未命名1.pr")
 
     def about(self):
         messagebox.showinfo("關於","作者：取名困難症\n版本：0.1\n日期：2023/3/18")
 
     def open_file(self):
-        file = filedialog.askopenfilename(initialdir="/", title="Select file", filetypes=(("A++ projects", "*.appp"), ("Text files", "*.txt"), ("All files", "*.*")))
+        file = filedialog.askopenfilename(initialdir="/", title="Select file", filetypes=(("PR++ projects", "*.pr"), ("Text files", "*.txt"), ("All files", "*.*")))
         if file:
             with open(file, "r") as f:
                 content = f.read()
@@ -137,12 +137,12 @@ class GUI:
                 self.highlight_keywords()  # 添加此行以高亮关键词
 
     def save_file(self):
-        file = filedialog.asksaveasfilename(initialdir="/", title="Save file", filetypes=(("A++ projects", "*.appp"), ("Text files", "*.txt"), ("All files", "*.*")))
+        file = filedialog.asksaveasfilename(initialdir="/", title="Save file", filetypes=(("PR++ projects", "*.pr"), ("Text files", "*.txt"), ("All files", "*.*")))
         if file:
             self.save_content(file)
 
     def save_file_as(self):
-        file = filedialog.asksaveasfilename(initialdir="/", title="Save file as", filetypes=(("A++ projects", "*.appp"), ("Text files", "*.txt"), ("All files", "*.*")))
+        file = filedialog.asksaveasfilename(initialdir="/", title="Save file as", filetypes=(("PR++ projects", "*.pr"), ("Text files", "*.txt"), ("All files", "*.*")))
         if file:
             self.save_content(file)
 
@@ -159,8 +159,7 @@ class GUI:
         # 清除所有标签
 
         self.text_input.tag_remove("'", '1.0', END)
-        self.text_input.tag_remove('"', '1.0', END)
-        self.text_input.tag_remove('//', '1.0', END)
+        self.text_input.tag_remove('//', '1.0', END)  # 清除注释标签
         self.text_input.tag_remove('return', '1.0', END)
         self.text_input.tag_remove('func', '1.0', END)
         self.text_input.tag_remove('loop', '1.0', END)
@@ -168,6 +167,7 @@ class GUI:
         self.text_input.tag_remove('run', '1.0', END)
         self.text_input.tag_remove('True', '1.0', END)
         self.text_input.tag_remove('False', '1.0', END)
+        self.text_input.tag_remove('print', '1.0', END)
         self.text_input.tag_remove('prln', '1.0', END)
         self.text_input.tag_remove('load', '1.0', END)
         self.text_input.tag_remove('as', '1.0', END)
@@ -182,6 +182,17 @@ class GUI:
                 break
             end = f"{start}+{len('prln')}c"
             self.text_input.tag_add('prln', start, end)
+            start = end
+            
+        # 高亮关键词 print
+        content = self.text_input.get("1.0", END)
+        start = "1.0"
+        while True:
+            start = self.text_input.search("print", start, stopindex=END, regexp=False)
+            if not start:
+                break
+            end = f"{start}+{len('print')}c"
+            self.text_input.tag_add('print', start, end)
             start = end
             
         # 高亮关键词 load
@@ -230,20 +241,6 @@ class GUI:
             # 高亮从第一个单引号到第二个单引号之间的内容
             self.text_input.tag_add("'", start, f"{end}+1c")  # 使用半角单引号作为标签名称
             start = f"{end}+1c"  # 继续搜索下一个单引号
-            
-        # 高亮关键词 ""
-        start = "1.0"
-        while True:
-            start = self.text_input.search('"', start, stopindex=END, regexp=False)  # 使用半角引号
-            if not start:
-                break
-            # 找到单引号后，找到下一个引号的位置
-            end = self.text_input.search('"', f"{start}+1c", stopindex=END, regexp=False)
-            if not end:
-                break
-            # 高亮从第一个引号到第二个引号之间的内容
-            self.text_input.tag_add('"', start, f"{end}+1c")  # 使用半角单引号作为标签名称
-            start = f"{end}+1c"  # 继续搜索下一个引号
             
         
 
