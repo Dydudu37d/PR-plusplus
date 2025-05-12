@@ -49,7 +49,7 @@ class GUI:
         master.grid_columnconfigure(1, weight=4)  # 让editor列占据更多空间
         
         self.tab1 = ttk.Frame(self.help)
-
+        
         self.help_list = Listbox(self.tab1)
         self.scrollbar_x = Scrollbar(self.tab1, orient='horizontal')
         self.scrollbar_y = Scrollbar(self.tab1)
@@ -64,7 +64,7 @@ class GUI:
         self.help_list.insert(END, "    1.基本命令")
         self.help_list.insert(END, "        1.輸出：prln([打印內容])")
         self.help_list.insert(END, "        2.輸入：a = input([提示詞]) 讀取用戶輸入")
-        #self.help_list.insert(END, "        3.提示框：msgbox([標題],[內容],[參數圖標-i = 介紹 -w = 警告 -e = 錯誤],[參數按鈕-s = 確認和取消 -y = 確定 -yn = 是和否])")
+        self.help_list.insert(END, "        3.提示框：messagebox.showinfo([標題],[內容])")
         
         self.help.add(self.tab1, text="帮助")
 
@@ -241,8 +241,6 @@ class GUI:
             # 高亮从第一个单引号到第二个单引号之间的内容
             self.text_input.tag_add("'", start, f"{end}+1c")  # 使用半角单引号作为标签名称
             start = f"{end}+1c"  # 继续搜索下一个单引号
-            
-        
 
         # 高亮关键词 return   
         start = "1.0"
@@ -282,7 +280,7 @@ class GUI:
             self.text_input.tag_add('func', start, end)
             start = end
             
-        # 高亮关键词 loop   
+        # 高亮关键词 return  
         start = "1.0"
         while True:
             start = self.text_input.search("return", start, stopindex=END, regexp=False)

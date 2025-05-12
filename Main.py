@@ -13,7 +13,6 @@ keyword = {
 def start(code):
     for key in keyword:
         code = code.replace(key, keyword[key])
-        #if "msgbox" in key:
-            #os.system('mshta vbscript:msgbox('提示内容1',1,'提示窗口1')(window.close)')
+    exec('from tkinter import messagebox')
     exec(code)
     
